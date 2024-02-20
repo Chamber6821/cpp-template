@@ -4,7 +4,6 @@ rwildcard = $(filter-out \ ,$(foreach pattern,$(2),$(wildcard $(1)/$(pattern)))$
 eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 
 CONFIG ?= config/release.mk
-$(info Config file is $(CONFIG))
 include config/default.mk # load default settings
 -include $(CONFIG)        # load user configuration for user platform
 
