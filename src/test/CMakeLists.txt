@@ -6,7 +6,7 @@ add_executable(${PROJECT_NAME} ${PROJECT_BINARY_DIR}/null.cpp ${TESTS})
 FetchContent_Declare(
   doctest
   GIT_REPOSITORY https://github.com/doctest/doctest.git
-  GIT_TAG v2.4.9
+  GIT_TAG v2.4.11
 )
 FetchContent_MakeAvailable(doctest)
 target_link_libraries(${PROJECT_NAME} PRIVATE doctest_with_main)
