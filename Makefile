@@ -4,7 +4,7 @@ rwildcard = $(filter-out \ ,$(foreach pattern,$(2),$(wildcard $(1)/$(pattern)))$
 CONFIG ?= config/release.mk
 $(info Config file is $(CONFIG))
 include config/default.mk # load default settings
-include $(CONFIG)         # load user configuration for user platform
+-include $(CONFIG)        # load user configuration for user platform
 
 APP_TARGET     ?= main
 BUILD_NAME     ?= default
