@@ -13,8 +13,7 @@ CMAKE_LINT_DIR  = build/$(BUILD_NAME)-lint
 FILE_LIST       = build/$(BUILD_NAME)-file-list
 
 SOURCE_PATTERNS = *.h *.c *.hpp *.cpp
-FOLDERS_WITH_SOURCES = src
-CONFIGS = CMakeLists.txt $(foreach x,$(FOLDERS_WITH_SOURCES),$(call rwildcard,$(x),CMakeLists.txt))
+CONFIGS = CMakeLists.txt packages.cmake $(call rwildcard,src,CMakeLists.txt)
 CODES   = $(foreach x,$(FOLDERS_WITH_SOURCES),$(call rwildcard,$(x),$(SOURCE_PATTERNS)))
 $(shell cmake -D OUT=$(FILE_LIST) -D FILES="$(CODES)" -P ./cmake/update-file-list.cmake)
 
