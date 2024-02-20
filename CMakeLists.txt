@@ -15,8 +15,6 @@ add_subdirectory(src/cmd)
 add_subdirectory(src/main)
 add_subdirectory(src/test)
 
-message(STATUS "${BUILDSYSTEM_TARGETS}")
-
 target_link_libraries(test PRIVATE main-lib)
 
 get_property(apps DIRECTORY src/cmd PROPERTY BUILDSYSTEM_TARGETS)
