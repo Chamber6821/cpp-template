@@ -1,5 +1,7 @@
 # https://stackoverflow.com/a/18258352/13830772
 rwildcard = $(filter-out \ ,$(foreach pattern,$(2),$(wildcard $(1)/$(pattern)))$(foreach child,$(wildcard $(1)/*),$(call rwildcard,$(child),$(2))))
+# https://stackoverflow.com/a/7324640/13830772
+eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 
 CONFIG ?= config/release.mk
 $(info Config file is $(CONFIG))
@@ -22,19 +24,18 @@ CMAKE_CONFIG      = cmake $(CMAKE_OPTIONS) -B $(CMAKE_BUILD_DIR)
 CMAKE_LINT        = cmake --build $(CMAKE_LINT_DIR)  $(CMAKE_BUILD_OPTIONS)
 CMAKE_BUILD       = cmake --build $(CMAKE_BUILD_DIR) $(CMAKE_BUILD_OPTIONS)
 
+APP_EXECUTABLE  = $(CMAKE_BUILD_DIR)/bin/$(APP_TARGET)
 TEST_EXECUTABLE = $(CMAKE_BUILD_DIR)/bin/test
 
 .PHONY: all
 all: app
 
 .PHONY: run
-run: app
-	$(CMAKE_BUILD_DIR)/bin/$(APP_TARGET)
+run: $(APP_EXECUTABLE)
+	@$(APP_EXECUTABLE)
 
 .PHONY: app
-app: $(CMAKE_BUILD_DIR)
-	$(CMAKE_BUILD) -t $(APP_TARGET)
-	@echo OUT EXECUTABLE: $(CMAKE_BUILD_DIR)/bin/$(APP_TARGET)
+app: $(APP_EXECUTABLE)
 
 .PHONY: test
 test: $(TEST_EXECUTABLE)
@@ -60,6 +61,9 @@ all-formatted:
 .PHONY: cmake
 cmake:
 	$(CMAKE_CONFIG)
+
+$(APP_EXECUTABLE): $(CMAKE_BUILD_DIR)
+	$(CMAKE_BUILD) -t $(APP_TARGET)
 
 $(TEST_EXECUTABLE): $(CMAKE_BUILD_DIR)
 	$(CMAKE_BUILD) -t test
