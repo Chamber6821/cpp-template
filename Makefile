@@ -14,7 +14,7 @@ FILE_LIST       = build/$(BUILD_NAME)-file-list
 
 SOURCE_PATTERNS = *.h *.c *.hpp *.cpp
 CONFIGS = CMakeLists.txt packages.cmake $(call rwildcard,src,CMakeLists.txt)
-CODES   = $(foreach x,$(FOLDERS_WITH_SOURCES),$(call rwildcard,$(x),$(SOURCE_PATTERNS)))
+CODES   = $(foreach x,src,$(call rwildcard,$(x),$(SOURCE_PATTERNS)))
 $(shell cmake -D OUT=$(FILE_LIST) -D FILES="$(CODES)" -P ./cmake/update-file-list.cmake)
 
 CMAKE_CONFIG_LINT = cmake $(CMAKE_OPTIONS) -B $(CMAKE_LINT_DIR) -D LINT=ON -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
@@ -27,6 +27,10 @@ TEST_RUN   = $(CMAKE_BUILD_DIR)/bin/test
 
 .PHONY: all
 all: app
+
+.PHONY: run
+run: app
+	$(CMAKE_BUILD_DIR)/bin/$(APP_TARGET)
 
 .PHONY: app
 app: $(CMAKE_BUILD_DIR)
