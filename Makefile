@@ -69,4 +69,10 @@ $(CMAKE_BUILD_DIR): $(FILE_LIST) $(CONFIGS)
 
 .PHONY: clean
 clean:
+	cmake -D PATH:STRING=$(CMAKE_LINT_DIR) -P ./cmake/rm.cmake
+	cmake -D PATH:STRING=$(CMAKE_BUILD_DIR) -P ./cmake/rm.cmake
+	cmake -D PATH:STRING=$(FILE_LIST) -P ./cmake/rm.cmake
+
+.PHONY: clean-all
+clean-all:
 	cmake -D PATH:STRING=build -P ./cmake/rm.cmake
