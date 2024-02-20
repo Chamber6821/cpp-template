@@ -22,8 +22,7 @@ CMAKE_CONFIG      = cmake $(CMAKE_OPTIONS) -B $(CMAKE_BUILD_DIR)
 CMAKE_LINT        = cmake --build $(CMAKE_LINT_DIR)  $(CMAKE_BUILD_OPTIONS)
 CMAKE_BUILD       = cmake --build $(CMAKE_BUILD_DIR) $(CMAKE_BUILD_OPTIONS)
 
-TEST_BUILD = $(CMAKE_BUILD) -t test
-TEST_RUN   = $(CMAKE_BUILD_DIR)/bin/test
+TEST_EXECUTABLE = $(CMAKE_BUILD_DIR)/bin/test
 
 .PHONY: all
 all: app
@@ -38,14 +37,12 @@ app: $(CMAKE_BUILD_DIR)
 	@echo OUT EXECUTABLE: $(CMAKE_BUILD_DIR)/bin/$(APP_TARGET)
 
 .PHONY: test
-test: $(CMAKE_BUILD_DIR)
-	$(TEST_BUILD)
-	$(TEST_RUN) --order-by=rand --test-suite-exclude=it
+test: $(TEST_EXECUTABLE)
+	$(TEST_EXECUTABLE) --order-by=rand --test-suite-exclude=it
 
 .PHONY: it
-it: $(CMAKE_BUILD_DIR)
-	$(TEST_BUILD)
-	$(TEST_RUN) --order-by=rand --test-suite=it
+it: $(TEST_EXECUTABLE)
+	$(TEST_EXECUTABLE) --order-by=rand --test-suite=it
 
 .PHONY: lint
 lint: all-formatted
@@ -63,6 +60,9 @@ all-formatted:
 .PHONY: cmake
 cmake:
 	$(CMAKE_CONFIG)
+
+$(TEST_EXECUTABLE): $(CMAKE_BUILD_DIR)
+	$(CMAKE_BUILD) -t test
 
 $(CMAKE_BUILD_DIR): $(FILE_LIST) $(CONFIGS)
 	$(CMAKE_CONFIG)
