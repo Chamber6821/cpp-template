@@ -64,9 +64,11 @@ cmake:
 
 $(APP_EXECUTABLE): $(CMAKE_BUILD_DIR) $(CODES)
 	$(CMAKE_BUILD) -t $(APP_TARGET)
+	cmake -D FILES=$(APP_EXECUTABLE) -P ./cmake/touch.cmake
 
 $(TEST_EXECUTABLE): $(CMAKE_BUILD_DIR) $(CODES)
 	$(CMAKE_BUILD) -t test
+	cmake -D FILES=$(TEST_EXECUTABLE) -P ./cmake/touch.cmake
 
 $(CMAKE_BUILD_DIR): $(FILE_LIST) $(CONFIGS)
 	$(CMAKE_CONFIG)
