@@ -6,7 +6,7 @@ file(GLOB_RECURSE CPP_SOURCES *.cpp)
 set(HEADERS ${C_HEADERS} ${CPP_HEADERS})
 set(SOURCES ${C_SOURCES} ${CPP_SOURCES})
 
-if("${SOURCES}")
+if(SOURCES)
   add_library(${PROJECT_NAME} ${HEADERS} ${SOURCES})
   target_include_directories(${PROJECT_NAME} PUBLIC .)
 else()

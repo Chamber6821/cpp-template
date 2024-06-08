@@ -1,11 +1,13 @@
 # https://stackoverflow.com/a/18258352/13830772
-rwildcard = $(filter-out \ ,$(foreach pattern,$(2),$(wildcard $(1)/$(pattern)))$(foreach child,$(wildcard $(1)/*),$(call rwildcard,$(child),$(2))))
+rwildcard = $(filter-out \ ,$(foreach pattern,$(2),$(wildcard $(1)/$(pattern))) $(foreach child,$(wildcard $(1)/*),$(call rwildcard,$(child),$(2))))
 # https://stackoverflow.com/a/7324640/13830772
 eq = $(and $(findstring $(1),$(2)),$(findstring $(2),$(1)))
 
-CONFIG ?= config/release.mk
-include config/default.mk # load default settings
--include $(CONFIG)        # load user configuration for user platform
+-include .env
+CONFIG    ?= config/default.mk
+MAKEFLAGS ?= $(MAKEFLAGS) -j $(shell nproc)
+APP_ARGS  ?=
+include $(CONFIG)
 
 APP_TARGET     ?= main
 BUILD_NAME     ?= default
@@ -19,7 +21,7 @@ CODES   = $(foreach x,src,$(call rwildcard,$(x),$(SOURCE_PATTERNS)))
 $(shell cmake -D OUT=$(FILE_LIST) -D FILES="$(CODES)" -P ./cmake/update-file-list.cmake)
 
 CMAKE_CONFIG_LINT = cmake $(CMAKE_OPTIONS) -B $(CMAKE_LINT_DIR) -D LINT=ON -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
-CMAKE_CONFIG      = cmake $(CMAKE_OPTIONS) -B $(CMAKE_BUILD_DIR)
+CMAKE_CONFIG      = cmake $(CMAKE_OPTIONS) -B $(CMAKE_BUILD_DIR) -D CMAKE_EXPORT_COMPILE_COMMANDS=ON
 CMAKE_LINT        = cmake --build $(CMAKE_LINT_DIR)  $(CMAKE_BUILD_OPTIONS)
 CMAKE_BUILD       = cmake --build $(CMAKE_BUILD_DIR) $(CMAKE_BUILD_OPTIONS)
 
@@ -32,7 +34,14 @@ all: app
 
 .PHONY: run
 run: $(APP_EXECUTABLE)
-	@$(APP_EXECUTABLE)
+	$(APP_EXECUTABLE) $(APP_ARGS)
+
+.PHONY: perf
+perf: $(APP_EXECUTABLE)
+	perf record -o $(CMAKE_BUILD_DIR)/perf.data --call-graph fp $(APP_EXECUTABLE) $(APP_ARGS)
+	perf script -i $(CMAKE_BUILD_DIR)/perf.data | stackcollapse-perf.pl > $(CMAKE_BUILD_DIR)/collapsed-perf.data
+	flamegraph.pl $(CMAKE_BUILD_DIR)/collapsed-perf.data > $(CMAKE_BUILD_DIR)/flamegraph.svg
+	firefox $(CMAKE_BUILD_DIR)/flamegraph.svg
 
 .PHONY: app
 app: $(APP_EXECUTABLE)
