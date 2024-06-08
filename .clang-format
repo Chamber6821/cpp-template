@@ -1,25 +1,28 @@
 BasedOnStyle: LLVM
 
-# Indents
-UseTab: Never
-IndentWidth: 2
-# Obj{
-#   arg1,
-#   arg2
-# };
-BracedInitializerIndentWidth: 2
-# make<A>(
-#   make<B>(),
-#   make<C>()
-# );
-ContinuationIndentWidth: 2
-
-SeparateDefinitionBlocks: Always
-AlwaysBreakTemplateDeclarations: Yes
-AllowShortIfStatementsOnASingleLine: Always
-AlignConsecutiveMacros: AcrossEmptyLines
-AllowAllArgumentsOnNextLine: false
-AllowShortCaseLabelsOnASingleLine: true
 AlignAfterOpenBracket: BlockIndent
+AlignConsecutiveMacros: AcrossEmptyLines
+AlignConsecutiveShortCaseStatements:
+  Enabled: true
+AlignOperands: AlignAfterOperator
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: true
+AllowShortFunctionsOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+AllowShortLoopsOnASingleLine: true
+AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
-BreakStringLiterals: false
+BinPackParameters: false
+BreakBeforeBinaryOperators: All
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+IntegerLiteralSeparator:
+  Decimal: 3
+  DecimalMinDigits: 5
+KeepEmptyLinesAtTheStartOfBlocks: false
+PackConstructorInitializers: NextLine
+RemoveParentheses: ReturnStatement
+RemoveSemicolon: true
+SeparateDefinitionBlocks: Always
+
